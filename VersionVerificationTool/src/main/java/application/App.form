@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="application.App">
+  <grid id="27dc6" binding="panelMain" layout-manager="GridLayoutManager" row-count="9" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="etched"/>
+    <children>
+      <component id="9082f" class="javax.swing.JComboBox" binding="qaCombo">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="QA1"/>
+            <item value="QA2"/>
+            <item value="QA3"/>
+          </model>
+        </properties>
+      </component>
+      <component id="33e5d" class="javax.swing.JComboBox" binding="prodCombo">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="PP"/>
+            <item value="PM"/>
+            <item value="PROD"/>
+          </model>
+        </properties>
+      </component>
+      <component id="1ceb9" class="javax.swing.JComboBox" binding="domainCombo">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="BKG"/>
+            <item value="SHV"/>
+            <item value="SHP"/>
+            <item value="SHPBE"/>
+            <item value="SHPFE"/>
+            <item value="SHPV"/>
+            <item value="BERDOM"/>
+            <item value="BERPRS"/>
+            <item value="BCRDOM"/>
+            <item value="BCRPRS"/>
+          </model>
+        </properties>
+      </component>
+      <component id="9b0e6" class="javax.swing.JLabel" binding="qaVersionsLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="QA Versions"/>
+        </properties>
+      </component>
+      <component id="e343e" class="javax.swing.JTable" binding="table1" default-binding="true">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="b7239" class="javax.swing.JButton" binding="verifyButton">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Verify"/>
+        </properties>
+      </component>
+      <component id="ea306" class="javax.swing.JLabel" binding="verificationResultLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Verification Result"/>
+        </properties>
+      </component>
+      <component id="7a658" class="javax.swing.JTable" binding="table2" default-binding="true">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="48bc2" class="javax.swing.JLabel" binding="titleLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Version Verification Tool"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
