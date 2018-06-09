@@ -1,13 +1,13 @@
 package application;
 
-import com.google.gson.stream.JsonReader;
-
+import javax.json.*;
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,58 +26,62 @@ public class App {
     private List<String> qaUrls = new ArrayList<>();
     private List<String> prodUrls = new ArrayList<>();
 
+    private String domain = "";
+
     public App() {
-        qaCombo.addItemListener(new ItemListener() {
+        domainCombo.addActionListener(new ActionListener() {
             /**
-             * Invoked when an item has been selected or deselected by the user.
-             * The code written for this method performs the operations
-             * that need to occur when an item is selected (or deselected).
+             * Invoked when an action occurs.
              *
              * @param e
              */
             @Override
-            public void itemStateChanged(ItemEvent e) {
-                System.out.println(e.getItem());
-//                getUrls("", e.getItem().toSring());
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox) e.getSource();
+                domain = (String) cb.getSelectedItem();
             }
         });
-        domainCombo.addItemListener(new ItemListener() {
+        qaCombo.addActionListener(new ActionListener() {
             /**
-             * Invoked when an item has been selected or deselected by the user.
-             * The code written for this method performs the operations
-             * that need to occur when an item is selected (or deselected).
+             * Invoked when an action occurs.
              *
              * @param e
              */
             @Override
-            public void itemStateChanged(ItemEvent e) {
-                getUrls(e.getItem().toString(), "");
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox) e.getSource();
+                String qaEnvironment = (String) cb.getSelectedItem();
+                if(!qaEnvironment.isEmpty() && !domain.isEmpty()) {
+                    getUrls(qaEnvironment, true, false);
+//                    TODO: Get version using url
+                }
             }
         });
     }
 
-    public void getUrls(String domain, String qaEnv) {
+    public List<JsonValue> getUrls(String environment, boolean isQAEnvionment, boolean isProduction) {
+        String path = "";
+        if (isQAEnvionment) {
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\qaDomain.json";
+        } else if (isProduction) {
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\prodDomain.json";
+        } else {
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\ppDomain.json";
+        }
+
+        File jsonInputFile = new File(path);
+        InputStream is;
         try {
-            com.google.gson.stream.JsonReader reader = new JsonReader(new FileReader("C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\ppDomain.json"));
-            reader.beginObject();
-            while (reader.hasNext()) {
-                String name = reader.nextName();
-                System.out.println(name);
-                if (name.equals(domain)) {
-                    reader.beginArray();
-                    while (reader.hasNext()) {
-                        System.out.println(reader.nextString());
-                    }
-                    reader.endArray();
-                }
-            }
-            reader.endObject();
+            is = new FileInputStream(jsonInputFile);
+            JsonReader reader = Json.createReader(is);
+            JsonObject empObj = reader.readObject();
             reader.close();
+            JsonArray urls = (JsonArray) empObj.get(domain);
+            return urls;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        return null;
     }
 
     public static void main(String[] args) {
