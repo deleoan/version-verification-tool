@@ -1,0 +1,6 @@
+Tasking tool:
+when choose qa environment and domain was selected should return qa version 
+when choose qa environment and domain was not selected, should not return version
+when choose prod/pp environment and domain and qa was selected, should return prod/pp version
+when choose prod/pp environment and domain and qa was not selected, should not return version
+when click verify button, should compare if qa and prod/pp versions are equal
