@@ -27,7 +27,6 @@
         <properties>
           <model>
             <item value="PP"/>
-            <item value="PM"/>
             <item value="PROD"/>
           </model>
         </properties>

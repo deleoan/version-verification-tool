@@ -2,8 +2,10 @@ package application;
 
 import javax.json.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -58,7 +60,14 @@ public class App {
                         JsonObject obj = (JsonObject) urls.get(0);
                         JsonString url = (JsonString) obj.get(qaEnvironment);
                         qaVersion = getVersion(url.toString());
-                        System.out.println(qaVersion);
+
+                        Object[] objs = {url.toString(), qaVersion};
+                        String col[] = {"URL","Version"};
+                        DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+                        table1.setModel(tableModel);
+                        tableModel.addRow(objs);
+
+                        tableModel.fireTableDataChanged();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -73,16 +82,24 @@ public class App {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
+                String col[] = {"URL","Version"};
+                DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+
                 JComboBox cb = (JComboBox) e.getSource();
                 String nonQAEnvironment = (String) cb.getSelectedItem();
                 if(!nonQAEnvironment.isEmpty() && !domain.isEmpty()) {
                     boolean isProduction = nonQAEnvironment == "PROD" ? true : false;
                     JsonArray urls = getUrls(false, false);
                     for (JsonValue url : urls) {
-                        System.out.println(url);
+                        System.out.println(url.toString());
                         try {
                             String version = getVersion(url.toString());
                             nonQAVersions.add(version);
+
+                            Object[] objs = {url.toString(), nonQAVersions.get(0)};
+                            tableModel.addRow(objs);
+                            table2.setModel(tableModel);
+                            tableModel.fireTableDataChanged();
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
@@ -91,17 +108,23 @@ public class App {
                 }
             }
         });
+        table1.addComponentListener(new ComponentAdapter() {
+        });
+        verifyButton.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             *
+             * @param e
+             */
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Verify button clicked!");
+            }
+        });
     }
 
     public JsonArray getUrls(boolean isQAEnvionment, boolean isProduction) {
-        String path = "";
-        if (isQAEnvionment) {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\qaDomain.json";
-        } else if (isProduction) {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\prodDomain.json";
-        } else {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\ppDomain.json";
-        }
+        String path = getPath(isQAEnvionment, isProduction);
 
         File jsonInputFile = new File(path);
         InputStream is;
@@ -117,6 +140,18 @@ public class App {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String getPath(boolean isQAEnvionment, boolean isProduction) {
+        String path = "";
+        if (isQAEnvionment) {
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\qaDomain.json";
+        } else if (isProduction) {
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\prodDomain.json";
+        } else {
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\ppDomain.json";
+        }
+        return path;
     }
 
     public String getVersion(String domainUrl) throws IOException {
