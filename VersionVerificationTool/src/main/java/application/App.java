@@ -145,11 +145,11 @@ public class App {
     private String getPath(boolean isQAEnvionment, boolean isProduction) {
         String path = "";
         if (isQAEnvionment) {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\qaDomain.json";
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\version-verification-tool\\urls\\qaDomain.json";
         } else if (isProduction) {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\prodDomain.json";
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\version-verification-tool\\urls\\prodDomain.json";
         } else {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\VV Tool Files\\ppDomain.json";
+            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\version-verification-tool\\urls\\ppDomain.json";
         }
         return path;
     }
