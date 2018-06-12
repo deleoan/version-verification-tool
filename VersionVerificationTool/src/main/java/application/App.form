@@ -5,7 +5,12 @@
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-856354"/>
+      <enabled value="false"/>
+      <font name="Segoe UI"/>
+      <preferredSize width="500" height="304"/>
+    </properties>
     <border type="etched"/>
     <children>
       <component id="9082f" class="javax.swing.JComboBox" binding="qaCombo">
