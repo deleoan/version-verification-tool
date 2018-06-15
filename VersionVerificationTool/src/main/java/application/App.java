@@ -40,6 +40,10 @@ public class App {
         domainCombo.addActionListener(e -> {
             JComboBox cb = (JComboBox) e.getSource();
             domain = (String) cb.getSelectedItem();
+            qaTableModel = new DefaultTableModel(columns, 0);
+            refreshTable(qaTableModel, qaVersionResult);
+            prodTableModel = new DefaultTableModel(columns, 0);
+            refreshTable(prodTableModel, productionVersionAndResult);
         });
         qaEnvironmentCombo.addActionListener(e -> {
             columns = new String[]{"URL", "Version"};
@@ -105,7 +109,7 @@ public class App {
             Vector prodRecord = ((Vector) record);
             if (prodRecord.get(1).equals(qaVersion)) {
                 prodRecord.add(2, "Version Matched");
-            } else if (record.equals("No Version")) {
+            } else if (prodRecord.get(1).equals("No Version")) {
                 prodRecord.add(2, "Server is down");
             } else {
                 prodRecord.add(2, "Version Mismatched");
