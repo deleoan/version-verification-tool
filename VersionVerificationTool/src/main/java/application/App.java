@@ -1,130 +1,126 @@
 package application;
 
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.Response;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import javax.json.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import static org.asynchttpclient.Dsl.asyncHttpClient;
 
 public class App {
     private JPanel panelMain;
-    private JComboBox qaCombo;
-    private JComboBox prodCombo;
+    private JComboBox qaEnvironmentCombo;
+    private JComboBox prodEnvironmentCombo;
     private JComboBox domainCombo;
     private JLabel qaVersionsLabel;
-    private JTable table1;
-    private JButton verifyButton;
+    private JTable qaVersionResult;
     private JLabel verificationResultLabel;
-    private JTable table2;
+    private JTable productionVersionAndResult;
     private JLabel titleLabel;
+    private JButton verifyButton;
 
-    private List<String> qaUrls = new ArrayList<>();
-    private List<String> prodUrls = new ArrayList<>();
-
+    private String qaVersion = "";
+    private String columns[] = {};
     public String domain = "";
-    public String qaVersion = "";
-    public List<String> nonQAVersions = new ArrayList<>();
+    private String qaEnvironment = "";
+    private String nonQAEnvironment = "";
+
+    private DefaultTableModel qaTableModel;
+    private DefaultTableModel prodTableModel;
 
     public App() {
-        domainCombo.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             *
-             * @param e
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox) e.getSource();
-                domain = (String) cb.getSelectedItem();
+        domainCombo.addActionListener(e -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            domain = (String) cb.getSelectedItem();
+        });
+        qaEnvironmentCombo.addActionListener(e -> {
+            columns = new String[]{"URL", "Version"};
+            qaTableModel = new DefaultTableModel(columns, 0);
+            qaTableModel.fireTableDataChanged();
+            JComboBox cb = (JComboBox) e.getSource();
+            qaEnvironment = (String) cb.getSelectedItem();
+            assert qaEnvironment != null;
+            if(!qaEnvironment.isEmpty() && !domain.isEmpty()) {
+                JsonArray urls = getUrls(true, false);
+                try {
+                    JsonObject obj = (JsonObject) urls.get(0);
+                    JsonString url = (JsonString) obj.get(qaEnvironment);
+                    qaVersion = getVersion(url.toString());
+
+                    Object[] rowObject = {url.toString(), qaVersion};
+                    qaTableModel.addRow(rowObject);
+                    refreshTable(qaTableModel, qaVersionResult);
+                } catch (InterruptedException | IOException | JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
-        qaCombo.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             *
-             * @param e
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox) e.getSource();
-                String qaEnvironment = (String) cb.getSelectedItem();
-                if(!qaEnvironment.isEmpty() && !domain.isEmpty()) {
-                    JsonArray urls = getUrls(true, false);
+        selectProductionDomain();
+        verifyButton.addActionListener(e -> {
+            if (!domain.isEmpty() && !qaEnvironment.isEmpty() && !nonQAEnvironment.isEmpty()) {
+                verifyVersions();
+            } else {
+                JOptionPane.showMessageDialog(null, "Please fill all required fields!");
+            }
+        });
+    }
+
+    private void selectProductionDomain() {
+        prodEnvironmentCombo.addActionListener(e -> {
+            columns = new String[]{"URL", "Version", "Result"};
+            prodTableModel = new DefaultTableModel(columns, 0);
+            prodTableModel.fireTableDataChanged();
+
+            JComboBox cb = (JComboBox) e.getSource();
+            nonQAEnvironment = (String) cb.getSelectedItem();
+            assert nonQAEnvironment != null;
+            if(!nonQAEnvironment.isEmpty() && !domain.isEmpty()) {
+                boolean isProduction = nonQAEnvironment.equals("PROD");
+                JsonArray urls = getUrls(false, isProduction);
+                for (JsonValue url : urls) {
+                    System.out.println(url.toString());
                     try {
-                        JsonObject obj = (JsonObject) urls.get(0);
-                        JsonString url = (JsonString) obj.get(qaEnvironment);
-                        qaVersion = getVersion(url.toString());
-
-                        Object[] objs = {url.toString(), qaVersion};
-                        String col[] = {"URL","Version"};
-                        DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-                        table1.setModel(tableModel);
-                        tableModel.addRow(objs);
-
-                        tableModel.fireTableDataChanged();
-                    } catch (IOException e1) {
+                        String nonQAVersion = getVersion(url.toString());
+                        Object[] rowObject = {url.toString(), nonQAVersion};
+                        prodTableModel.addRow(rowObject);
+                        refreshTable(prodTableModel, productionVersionAndResult);
+                    } catch (IOException | InterruptedException | JSONException e1) {
                         e1.printStackTrace();
                     }
                 }
             }
         });
-        prodCombo.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             *
-             * @param e
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String col[] = {"URL","Version"};
-                DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-
-                JComboBox cb = (JComboBox) e.getSource();
-                String nonQAEnvironment = (String) cb.getSelectedItem();
-                if(!nonQAEnvironment.isEmpty() && !domain.isEmpty()) {
-                    boolean isProduction = nonQAEnvironment == "PROD" ? true : false;
-                    JsonArray urls = getUrls(false, false);
-                    for (JsonValue url : urls) {
-                        System.out.println(url.toString());
-                        try {
-                            String version = getVersion(url.toString());
-                            nonQAVersions.add(version);
-
-                            Object[] objs = {url.toString(), nonQAVersions.get(0)};
-                            tableModel.addRow(objs);
-                            table2.setModel(tableModel);
-                            tableModel.fireTableDataChanged();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                        System.out.println(nonQAVersions);
-                    }
-                }
-            }
-        });
-        table1.addComponentListener(new ComponentAdapter() {
-        });
-        verifyButton.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             *
-             * @param e
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Verify button clicked!");
-            }
-        });
     }
 
-    public JsonArray getUrls(boolean isQAEnvionment, boolean isProduction) {
-        String path = getPath(isQAEnvionment, isProduction);
+    private void verifyVersions() {
+        for (Object record : prodTableModel.getDataVector()) {
+            Vector prodRecord = ((Vector) record);
+            if (prodRecord.get(1).equals(qaVersion)) {
+                prodRecord.add(2, "Version Matched");
+            } else if (record.equals("No Version")) {
+                prodRecord.add(2, "Server is down");
+            } else {
+                prodRecord.add(2, "Version Mismatched");
+            }
+        }
+        refreshTable(prodTableModel, productionVersionAndResult);
+    }
+
+    private void refreshTable(DefaultTableModel tableModel, JTable tableResult) {
+        tableResult.setModel(tableModel);
+        tableModel.fireTableDataChanged();
+    }
+
+    public JsonArray getUrls(boolean isQAEnvironment, boolean isProduction) {
+        String path = getPath(isQAEnvironment, isProduction);
 
         File jsonInputFile = new File(path);
         InputStream is;
@@ -133,57 +129,49 @@ public class App {
             JsonReader reader = Json.createReader(is);
             JsonObject empObj = reader.readObject();
             reader.close();
-
-            JsonArray urls = (JsonArray) empObj.get(domain);
-            return urls;
+            if (isQAEnvironment) {
+                String updateSHPDomain = domain.contains("SHP") ? "SHP" : domain;
+                return (JsonArray) empObj.get(updateSHPDomain);
+            }
+            return (JsonArray) empObj.get(domain);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private String getPath(boolean isQAEnvionment, boolean isProduction) {
-        String path = "";
-        if (isQAEnvionment) {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\version-verification-tool\\urls\\qaDomain.json";
+    private String getPath(boolean isQAEnvironment, boolean isProduction) {
+        String path;
+        if (isQAEnvironment) {
+            path = "D:\\My documents\\SHPBKG\\TW Workshop\\TW\\repo\\version-verification-tool\\urls\\qaDomain.json";
         } else if (isProduction) {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\version-verification-tool\\urls\\prodDomain.json";
+            path = "D:\\My documents\\SHPBKG\\TW Workshop\\TW\\repo\\version-verification-tool\\urls\\prodDomain.json";
         } else {
-            path = "C:\\Users\\Ana Katrina De Leon\\Documents\\Work\\TW\\version-verification-tool\\urls\\ppDomain.json";
+            path = "D:\\My documents\\SHPBKG\\TW Workshop\\TW\\repo\\version-verification-tool\\urls\\ppDomain.json";
         }
         return path;
     }
 
-    public String getVersion(String domainUrl) throws IOException {
-        domainUrl = "http://services.groupkt.com/state/get/IND/all";
-        URL url = new URL(domainUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept", "application/json");
-
-        if (conn.getResponseCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : "
-                    + conn.getResponseCode());
+    private String getVersion(String domainUrl) throws IOException, InterruptedException, JSONException {
+        AsyncHttpClient asyncHttpClient = asyncHttpClient();
+        Future<Response> whenResponse = asyncHttpClient.prepareGet(domainUrl).execute();
+        Response response = null;
+        String version;
+        try {
+            response = whenResponse.get();
+            JSONObject jsonObj = new JSONObject(response.getResponseBody());
+            version = (String) jsonObj.get("version");
+        } catch (ExecutionException e) {
+            version = "No Version";
         }
+        return version;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                (conn.getInputStream())));
-
-        String output = "";
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-//            System.out.println(output);
-            return "121.12.1";
-        }
-
-        conn.disconnect();
-        return output;
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("App");
         frame.setContentPane(new App().panelMain);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

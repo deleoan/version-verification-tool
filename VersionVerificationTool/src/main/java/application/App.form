@@ -9,28 +9,30 @@
       <background color="-856354"/>
       <enabled value="false"/>
       <font name="Segoe UI"/>
-      <preferredSize width="500" height="304"/>
+      <preferredSize width="500" height="300"/>
     </properties>
     <border type="etched"/>
     <children>
-      <component id="9082f" class="javax.swing.JComboBox" binding="qaCombo">
+      <component id="9082f" class="javax.swing.JComboBox" binding="qaEnvironmentCombo">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <model>
+            <item value="Select QA Environment"/>
             <item value="QA1"/>
             <item value="QA2"/>
             <item value="QA3"/>
           </model>
         </properties>
       </component>
-      <component id="33e5d" class="javax.swing.JComboBox" binding="prodCombo">
+      <component id="33e5d" class="javax.swing.JComboBox" binding="prodEnvironmentCombo">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <model>
+            <item value="Select Non-QA Domain"/>
             <item value="PP"/>
             <item value="PROD"/>
           </model>
@@ -42,6 +44,7 @@
         </constraints>
         <properties>
           <model>
+            <item value="Select Domain"/>
             <item value="BKG"/>
             <item value="SHV"/>
             <item value="SHP"/>
@@ -53,6 +56,7 @@
             <item value="BCRDOM"/>
             <item value="BCRPRS"/>
           </model>
+          <toolTipText value=""/>
         </properties>
       </component>
       <component id="9b0e6" class="javax.swing.JLabel" binding="qaVersionsLabel">
@@ -63,21 +67,13 @@
           <text value="QA Versions"/>
         </properties>
       </component>
-      <component id="e343e" class="javax.swing.JTable" binding="table1" default-binding="true">
+      <component id="e343e" class="javax.swing.JTable" binding="qaVersionResult">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
         <properties/>
-      </component>
-      <component id="b7239" class="javax.swing.JButton" binding="verifyButton">
-        <constraints>
-          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Verify"/>
-        </properties>
       </component>
       <component id="ea306" class="javax.swing.JLabel" binding="verificationResultLabel">
         <constraints>
@@ -87,7 +83,7 @@
           <text value="Verification Result"/>
         </properties>
       </component>
-      <component id="7a658" class="javax.swing.JTable" binding="table2" default-binding="true">
+      <component id="7a658" class="javax.swing.JTable" binding="productionVersionAndResult">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
@@ -101,6 +97,14 @@
         </constraints>
         <properties>
           <text value="Version Verification Tool"/>
+        </properties>
+      </component>
+      <component id="952e2" class="javax.swing.JButton" binding="verifyButton" default-binding="true">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Verify"/>
         </properties>
       </component>
     </children>
