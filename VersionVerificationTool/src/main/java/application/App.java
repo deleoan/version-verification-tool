@@ -37,14 +37,23 @@ public class App {
     private DefaultTableModel prodTableModel;
 
     public App() {
-        domainCombo.addActionListener(e -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            domain = (String) cb.getSelectedItem();
-            qaTableModel = new DefaultTableModel(columns, 0);
-            refreshTable(qaTableModel, qaVersionResult);
-            prodTableModel = new DefaultTableModel(columns, 0);
-            refreshTable(prodTableModel, productionVersionAndResult);
+        onSelectDomain();
+        onSelectQAEnvironment();
+        onSelectProductionDomain();
+        onVerifyButtonClicked();
+    }
+
+    private void onVerifyButtonClicked() {
+        verifyButton.addActionListener(e -> {
+            if (!domain.isEmpty() && !qaEnvironment.isEmpty() && !nonQAEnvironment.isEmpty()) {
+                verifyVersions();
+            } else {
+                JOptionPane.showMessageDialog(null, "Please fill all required fields!");
+            }
         });
+    }
+
+    private void onSelectQAEnvironment() {
         qaEnvironmentCombo.addActionListener(e -> {
             columns = new String[]{"URL", "Version"};
             qaTableModel = new DefaultTableModel(columns, 0);
@@ -67,17 +76,20 @@ public class App {
                 }
             }
         });
-        selectProductionDomain();
-        verifyButton.addActionListener(e -> {
-            if (!domain.isEmpty() && !qaEnvironment.isEmpty() && !nonQAEnvironment.isEmpty()) {
-                verifyVersions();
-            } else {
-                JOptionPane.showMessageDialog(null, "Please fill all required fields!");
-            }
+    }
+
+    private void onSelectDomain() {
+        domainCombo.addActionListener(e -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            domain = (String) cb.getSelectedItem();
+            qaTableModel = new DefaultTableModel(columns, 0);
+            refreshTable(qaTableModel, qaVersionResult);
+            prodTableModel = new DefaultTableModel(columns, 0);
+            refreshTable(prodTableModel, productionVersionAndResult);
         });
     }
 
-    private void selectProductionDomain() {
+    private void onSelectProductionDomain() {
         prodEnvironmentCombo.addActionListener(e -> {
             columns = new String[]{"URL", "Version", "Result"};
             prodTableModel = new DefaultTableModel(columns, 0);
@@ -159,7 +171,7 @@ public class App {
     private String getVersion(String domainUrl) throws IOException, InterruptedException, JSONException {
         AsyncHttpClient asyncHttpClient = asyncHttpClient();
         Future<Response> whenResponse = asyncHttpClient.prepareGet(domainUrl).execute();
-        Response response = null;
+        Response response;
         String version;
         try {
             response = whenResponse.get();
