@@ -66,12 +66,14 @@ public class App {
                 try {
                     JsonObject obj = (JsonObject) urls.get(0);
                     JsonString url = (JsonString) obj.get(qaEnvironment);
-                    qaVersion = getVersion(url.toString());
+
+                    qaVersion = getVersion(url.getString());
 
                     Object[] rowObject = {url.toString(), qaVersion};
                     qaTableModel.addRow(rowObject);
                     refreshTable(qaTableModel, qaVersionResult);
                 } catch (InterruptedException | IOException | JSONException e1) {
+                    System.out.println("dasdasdasd");
                     e1.printStackTrace();
                 }
             }
@@ -104,7 +106,8 @@ public class App {
                 for (JsonValue url : urls) {
                     System.out.println(url.toString());
                     try {
-                        String nonQAVersion = getVersion(url.toString());
+                        JsonString newUrl = (JsonString) url;
+                        String nonQAVersion = getVersion(newUrl.getString());
                         Object[] rowObject = {url.toString(), nonQAVersion};
                         prodTableModel.addRow(rowObject);
                         refreshTable(prodTableModel, productionVersionAndResult);
@@ -137,33 +140,27 @@ public class App {
 
     public JsonArray getUrls(boolean isQAEnvironment, boolean isProduction) {
         String path = getPath(isQAEnvironment, isProduction);
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream is = classLoader.getResourceAsStream(path);
 
-        File jsonInputFile = new File(path);
-        InputStream is;
-        try {
-            is = new FileInputStream(jsonInputFile);
-            JsonReader reader = Json.createReader(is);
-            JsonObject empObj = reader.readObject();
-            reader.close();
-            if (isQAEnvironment) {
-                String updateSHPDomain = domain.contains("SHP") ? "SHP" : domain;
-                return (JsonArray) empObj.get(updateSHPDomain);
-            }
-            return (JsonArray) empObj.get(domain);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        JsonReader reader = Json.createReader(is);
+        JsonObject empObj = reader.readObject();
+        reader.close();
+        if (isQAEnvironment) {
+            String updateSHPDomain = domain.contains("SHP") ? "SHP" : domain;
+            return (JsonArray) empObj.get(updateSHPDomain);
         }
-        return null;
+        return (JsonArray) empObj.get(domain);
     }
 
     private String getPath(boolean isQAEnvironment, boolean isProduction) {
         String path;
         if (isQAEnvironment) {
-            path = "D:\\My documents\\SHPBKG\\TW Workshop\\TW\\repo\\version-verification-tool\\urls\\qaDomain.json";
+            path = "urls/qaDomain.json";
         } else if (isProduction) {
-            path = "D:\\My documents\\SHPBKG\\TW Workshop\\TW\\repo\\version-verification-tool\\urls\\prodDomain.json";
+            path = "urls/prodDomain.json";
         } else {
-            path = "D:\\My documents\\SHPBKG\\TW Workshop\\TW\\repo\\version-verification-tool\\urls\\ppDomain.json";
+            path = "urls/ppDomain.json";
         }
         return path;
     }
@@ -181,7 +178,6 @@ public class App {
             version = "No Version";
         }
         return version;
-
     }
 
     public static void main(String[] args) {

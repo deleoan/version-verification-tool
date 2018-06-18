@@ -8,7 +8,7 @@
     <properties>
       <background color="-2368549"/>
       <enabled value="false"/>
-      <font name="Century Gothic"/>
+      <font name="Gisha"/>
       <foreground color="-2565928"/>
       <preferredSize width="500" height="400"/>
     </properties>
@@ -19,6 +19,7 @@
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font name="Gisha"/>
           <model>
             <item value="Select QA Environment"/>
             <item value="QA1"/>
@@ -33,6 +34,7 @@
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font name="Gisha"/>
           <model>
             <item value="Select Non-QA Domain"/>
             <item value="PP"/>
@@ -45,6 +47,7 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font name="Gisha"/>
           <model>
             <item value="Select Domain"/>
             <item value="BKG"/>
@@ -66,6 +69,7 @@
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font name="Gisha"/>
           <text value="QA Version:"/>
         </properties>
       </component>
@@ -75,13 +79,17 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <font name="Gisha"/>
+        </properties>
       </component>
       <component id="ea306" class="javax.swing.JLabel" binding="verificationResultLabel">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <focusable value="true"/>
+          <font name="Gisha"/>
           <text value="Verification Result:"/>
         </properties>
       </component>
@@ -91,14 +99,18 @@
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <font name="Gisha"/>
+        </properties>
       </component>
       <component id="48bc2" class="javax.swing.JLabel" binding="titleLabel">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="&lt;html&gt;&lt;h3&gt;Version Verification Tool&lt;/h3&gt;&lt;/html&gt;"/>
+          <font name="Gisha"/>
+          <inheritsPopupMenu value="true"/>
+          <text value="&lt;html&gt;&lt;h4&gt;Version Verification Tool&lt;/h4&gt;&lt;/html&gt;"/>
         </properties>
       </component>
       <component id="952e2" class="javax.swing.JButton" binding="verifyButton" default-binding="true">
@@ -106,6 +118,7 @@
           <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font name="Gisha"/>
           <text value="Verify"/>
         </properties>
       </component>
