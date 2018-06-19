@@ -12,8 +12,8 @@ import static org.asynchttpclient.Dsl.asyncHttpClient;
 
 public class Client {
 
-    public static final String NO_VERSION = "No Version";
-    public static final String VERSION = "version";
+    private static final String NO_VERSION = "No Version";
+    private static final String VERSION = "version";
 
     public static String getVersion(String domainUrl) throws InterruptedException, JSONException {
         AsyncHttpClient asyncHttpClient = asyncHttpClient();
@@ -24,7 +24,7 @@ public class Client {
             JSONObject jsonObj = new JSONObject(response.getResponseBody());
             return (String) jsonObj.get(VERSION);
         } catch (ExecutionException e) {
-           return NO_VERSION;
+            return NO_VERSION;
         }
     }
 }

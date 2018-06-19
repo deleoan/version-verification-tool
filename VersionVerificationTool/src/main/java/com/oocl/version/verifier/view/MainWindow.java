@@ -16,7 +16,7 @@ public class MainWindow extends JFrame {
         setContentPane(mainPanel);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500,400);
+        setSize(500, 400);
         setVisible(true);
 
     }

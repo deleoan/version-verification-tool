@@ -49,7 +49,16 @@ public class MainWindowController {
         this.mainWindow.getProdEnvironmentCombo().addActionListener(this::onSelectProductionDomain);
         this.mainWindow.getVerifyButton().addActionListener(e -> onVerifyButtonClicked());
 
-//        TODO: POPULATE MODEL AND REFLECT TO UI
+        /*
+        TODO:
+        POPULATE MODEL AND REFLECT TO UI
+        CREATE TDD!!!!!
+        MAKE IT EXECUTABLE
+        CHANGE SELECTED ITEM WHEN QA COMBO UPDATED
+        IF HAVE MORE TIME:
+            CHANGE COMBO BOX TO MULTI-SELECT
+            ADD PROGRESS BAR
+        */
     }
 
     private void onSelectDomain(ActionEvent e) {
@@ -71,7 +80,7 @@ public class MainWindowController {
         selectedQaEnvironment = (String) cb.getSelectedItem();
 
         assert selectedQaEnvironment != null;
-        if(!selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+        if (!selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
             String updatedDomain = selectedDomain.contains("SHP") ? "SHP" : selectedDomain;
             JsonArray qaDomainUrls = getDomainUrls(true, false, updatedDomain);
 
@@ -97,7 +106,7 @@ public class MainWindowController {
         JComboBox cb = (JComboBox) e.getSource();
         selectedNonQaEnvironment = (String) cb.getSelectedItem();
         assert selectedNonQaEnvironment != null;
-        if(!selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+        if (!selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
             boolean isProduction = selectedNonQaEnvironment.equals("PROD");
             JsonArray nonQaDomainUrls = getDomainUrls(false, isProduction, "");
 
@@ -158,6 +167,7 @@ public class MainWindowController {
         }
         return path;
     }
+
     private void refreshTable(DefaultTableModel tableModel, JTable tableResult) {
         tableResult.setModel(tableModel);
         tableModel.fireTableDataChanged();
