@@ -4,28 +4,29 @@ import javax.swing.*;
 
 public class MainWindow extends JFrame {
 
-    private JPanel panelMain;
+    private JPanel mainPanel;
     private JComboBox domainCombo;
     private JComboBox qaEnvironmentCombo;
     private JComboBox prodEnvironmentCombo;
-    private JTable qaVersionResult;
-    private JTable productionVersionAndResult;
+    private JTable qaVersionResultTable;
+    private JTable productionVersionAndResultTable;
     private JButton verifyButton;
 
     public MainWindow() {
-        setContentPane(panelMain);
+        setContentPane(mainPanel);
         pack();
-        setVisible(true);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500,400);
+        setVisible(true);
+
     }
 
-    public JPanel getPanelMain() {
-        return panelMain;
+    public JPanel getMainPanel() {
+        return mainPanel;
     }
 
-    public void setPanelMain(JPanel panelMain) {
-        this.panelMain = panelMain;
+    public void setMainPanel(JPanel mainPanel) {
+        this.mainPanel = mainPanel;
     }
 
     public JComboBox getDomainCombo() {
@@ -52,20 +53,20 @@ public class MainWindow extends JFrame {
         this.prodEnvironmentCombo = prodEnvironmentCombo;
     }
 
-    public JTable getQaVersionResult() {
-        return qaVersionResult;
+    public JTable getQaVersionResultTable() {
+        return qaVersionResultTable;
     }
 
-    public void setQaVersionResult(JTable qaVersionResult) {
-        this.qaVersionResult = qaVersionResult;
+    public void setQaVersionResultTable(JTable qaVersionResultTable) {
+        this.qaVersionResultTable = qaVersionResultTable;
     }
 
-    public JTable getProductionVersionAndResult() {
-        return productionVersionAndResult;
+    public JTable getProductionVersionAndResultTable() {
+        return productionVersionAndResultTable;
     }
 
-    public void setProductionVersionAndResult(JTable productionVersionAndResult) {
-        this.productionVersionAndResult = productionVersionAndResult;
+    public void setProductionVersionAndResultTable(JTable productionVersionAndResultTable) {
+        this.productionVersionAndResultTable = productionVersionAndResultTable;
     }
 
     public JButton getVerifyButton() {

@@ -11,16 +11,28 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 public class MainWindowController {
+    private static final String URL = "URL";
+    private static final String VERSION = "Version";
+    private static final String RESULT = "Result";
+    private static final String VERSION_MATCHED = "Version Matched";
+    private static final String NO_VERSION = "No Version";
+    private static final String SERVER_IS_DOWN = "Server is down";
+    private static final String VERSION_MISMATCHED = "Version Mismatched";
+    private static final String QA_DOMAIN_JSON_PATH = "urls/qaDomain.json";
+    private static final String PROD_DOMAIN_JSON_PATH = "urls/prodDomain.json";
+    private static final String PP_DOMAIN_JSON_PATH = "urls/ppDomain.json";
+
     private final MainWindow mainWindow;
 
     private String qaVersion = "";
     private String columns[] = {};
-    private String domain = "";
-    private String qaEnvironment = "";
-    private String nonQAEnvironment = "";
+    private String selectedDomain = "";
+    private String selectedQaEnvironment = "";
+    private String selectedNonQaEnvironment = "";
 
     private DefaultTableModel qaTableModel;
     private DefaultTableModel prodTableModel;
@@ -32,117 +44,117 @@ public class MainWindowController {
     }
 
     private void initController() {
-        onSelectDomain();
-        onSelectQAEnvironment();
-        onSelectProductionDomain();
-        onVerifyButtonClicked();
+        this.mainWindow.getDomainCombo().addActionListener(this::onSelectDomain);
+        this.mainWindow.getQaEnvironmentCombo().addActionListener(this::onSelectQAEnvironment);
+        this.mainWindow.getProdEnvironmentCombo().addActionListener(this::onSelectProductionDomain);
+        this.mainWindow.getVerifyButton().addActionListener(e -> onVerifyButtonClicked());
+
+//        TODO: POPULATE MODEL AND REFLECT TO UI
     }
 
-    private void onVerifyButtonClicked() {
-        this.mainWindow.getVerifyButton().addActionListener(e -> {
-            if (!domain.isEmpty() && !qaEnvironment.isEmpty() && !nonQAEnvironment.isEmpty()) {
-                verifyVersions();
-            } else {
-                JOptionPane.showMessageDialog(null, "Please fill all required fields!");
+    private void onSelectDomain(ActionEvent e) {
+        JComboBox cb = (JComboBox) e.getSource();
+        selectedDomain = (String) cb.getSelectedItem();
+
+        qaTableModel = new DefaultTableModel(columns, 0);
+        refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
+        prodTableModel = new DefaultTableModel(columns, 0);
+        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
+    }
+
+    private void onSelectQAEnvironment(ActionEvent e) {
+        columns = new String[]{URL, VERSION};
+        qaTableModel = new DefaultTableModel(columns, 0);
+        qaTableModel.fireTableDataChanged();
+
+        JComboBox cb = (JComboBox) e.getSource();
+        selectedQaEnvironment = (String) cb.getSelectedItem();
+
+        assert selectedQaEnvironment != null;
+        if(!selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+            String updatedDomain = selectedDomain.contains("SHP") ? "SHP" : selectedDomain;
+            JsonArray qaDomainUrls = getDomainUrls(true, false, updatedDomain);
+
+            try {
+                JsonObject obj = (JsonObject) qaDomainUrls.get(0);
+                JsonString url = (JsonString) obj.get(selectedQaEnvironment);
+
+                qaVersion = Client.getVersion(url.getString());
+                Object[] rowObject = {url.toString(), qaVersion};
+                qaTableModel.addRow(rowObject);
+                refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
+            } catch (InterruptedException | JSONException e1) {
+                e1.printStackTrace();
             }
-        });
+        }
     }
 
-    private void onSelectProductionDomain() {
-        this.mainWindow.getProdEnvironmentCombo().addActionListener(e -> {
-            columns = new String[]{"URL", "Version", "Result"};
-            prodTableModel = new DefaultTableModel(columns, 0);
-            prodTableModel.fireTableDataChanged();
+    private void onSelectProductionDomain(ActionEvent e) {
+        columns = new String[]{URL, VERSION, RESULT};
+        prodTableModel = new DefaultTableModel(columns, 0);
+        prodTableModel.fireTableDataChanged();
 
-            JComboBox cb = (JComboBox) e.getSource();
-            nonQAEnvironment = (String) cb.getSelectedItem();
-            assert nonQAEnvironment != null;
-            if(!nonQAEnvironment.isEmpty() && !domain.isEmpty()) {
-                boolean isProduction = nonQAEnvironment.equals("PROD");
-                String path = getPath(false, isProduction);
-                JsonObject environmentUrlsObject = Util.getEnvironmentUrlsObject(path);
-                JsonArray nonQaDomainUrls = (JsonArray) environmentUrlsObject.get(domain);
+        JComboBox cb = (JComboBox) e.getSource();
+        selectedNonQaEnvironment = (String) cb.getSelectedItem();
+        assert selectedNonQaEnvironment != null;
+        if(!selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+            boolean isProduction = selectedNonQaEnvironment.equals("PROD");
+            JsonArray nonQaDomainUrls = getDomainUrls(false, isProduction, "");
 
-                for (JsonValue url : nonQaDomainUrls) {
-                    System.out.println(url.toString());
-                    try {
-                        JsonString newUrl = (JsonString) url;
-                        String nonQAVersion = Client.getVersion(newUrl.getString());
-                        Object[] rowObject = {url.toString(), nonQAVersion};
-                        prodTableModel.addRow(rowObject);
-                        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResult());
-                    } catch (InterruptedException | JSONException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void onSelectQAEnvironment() {
-        this.mainWindow.getQaEnvironmentCombo().addActionListener(e -> {
-            columns = new String[]{"URL", "Version"};
-            qaTableModel = new DefaultTableModel(columns, 0);
-            qaTableModel.fireTableDataChanged();
-            JComboBox cb = (JComboBox) e.getSource();
-            qaEnvironment = (String) cb.getSelectedItem();
-            assert qaEnvironment != null;
-            if(!qaEnvironment.isEmpty() && !domain.isEmpty()) {
-                String path = getPath(true, false);
-                JsonObject environmentUrlsObject = Util.getEnvironmentUrlsObject(path);
-                String updatedDomain = domain.contains("SHP") ? "SHP" : domain;
-                JsonArray qaDomainUrls = (JsonArray) environmentUrlsObject.get(updatedDomain);
-
+            for (JsonValue url : nonQaDomainUrls) {
+                System.out.println(url.toString());
                 try {
-                    JsonObject obj = (JsonObject) qaDomainUrls.get(0);
-                    JsonString url = (JsonString) obj.get(qaEnvironment);
-
-                    qaVersion = Client.getVersion(url.getString());
-
-                    Object[] rowObject = {url.toString(), qaVersion};
-                    qaTableModel.addRow(rowObject);
-                    refreshTable(qaTableModel, this.mainWindow.getQaVersionResult());
+                    JsonString newUrl = (JsonString) url;
+                    String nonQAVersion = Client.getVersion(newUrl.getString());
+                    Object[] rowObject = {url.toString(), nonQAVersion};
+                    prodTableModel.addRow(rowObject);
+                    refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
                 } catch (InterruptedException | JSONException e1) {
-                    System.out.println("dasdasdasd");
                     e1.printStackTrace();
                 }
             }
-        });
+        }
     }
 
-    private void onSelectDomain() {
-        this.mainWindow.getDomainCombo().addActionListener(e -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            domain = (String) cb.getSelectedItem();
-            qaTableModel = new DefaultTableModel(columns, 0);
-            refreshTable(qaTableModel, this.mainWindow.getQaVersionResult());
-            prodTableModel = new DefaultTableModel(columns, 0);
-            refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResult());
-        });
+    private JsonArray getDomainUrls(boolean isQAEnvironment, boolean isProduction, String domain) {
+        domain = domain.isEmpty() ? selectedDomain : domain;
+        String path = getPath(isQAEnvironment, isProduction);
+        JsonObject environmentUrlsObject = Util.getEnvironmentUrlsObject(path);
+        return (JsonArray) environmentUrlsObject.get(domain);
+    }
+
+    private void onVerifyButtonClicked() {
+        if (selectedDomain.isEmpty() || selectedQaEnvironment.isEmpty() || selectedNonQaEnvironment.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill all required fields!");
+        } else {
+            verifyVersions();
+        }
     }
 
     private void verifyVersions() {
         for (Object record : prodTableModel.getDataVector()) {
             Vector prodRecord = ((Vector) record);
             if (prodRecord.get(1).equals(qaVersion)) {
-                prodRecord.add(2, "Version Matched");
-            } else if (prodRecord.get(1).equals("No Version")) {
-                prodRecord.add(2, "Server is down");
+                prodRecord.add(2, VERSION_MATCHED);
+            } else if (prodRecord.get(1).equals(NO_VERSION)) {
+                prodRecord.add(2, SERVER_IS_DOWN);
             } else {
-                prodRecord.add(2, "Version Mismatched");
+                prodRecord.add(2, VERSION_MISMATCHED);
             }
         }
-        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResult());
+        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
     }
 
     private String getPath(boolean isQAEnvironment, boolean isProduction) {
         String path;
         if (isQAEnvironment) {
-            path = "urls/qaDomain.json";
-        } else if (isProduction) {
-            path = "urls/prodDomain.json";
+            path = QA_DOMAIN_JSON_PATH;
         } else {
-            path = "urls/ppDomain.json";
+            if (isProduction) {
+                path = PROD_DOMAIN_JSON_PATH;
+            } else {
+                path = PP_DOMAIN_JSON_PATH;
+            }
         }
         return path;
     }

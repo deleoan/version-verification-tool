@@ -11,8 +11,8 @@ public class Util {
         InputStream is = classLoader.getResourceAsStream(path);
 
         JsonReader reader = Json.createReader(is);
-        JsonObject empObj = reader.readObject();
+        JsonObject environmentUrlsObject = reader.readObject();
         reader.close();
-        return empObj;
+        return environmentUrlsObject;
     }
 }
