@@ -4,57 +4,75 @@ import javax.swing.*;
 
 public class MainWindow extends JFrame {
 
-    private JPanel mainPanel;
-    private JComboBox moduleCombobox;
-    private JComboBox environmentComboBox;
-    private JTable sourceTable;
-    private JTable targetTable;
+    private JPanel panelMain;
+    private JComboBox domainCombo;
+    private JComboBox qaEnvironmentCombo;
+    private JComboBox prodEnvironmentCombo;
+    private JTable qaVersionResult;
+    private JTable productionVersionAndResult;
+    private JButton verifyButton;
 
     public MainWindow() {
-        setContentPane(mainPanel);
+        setContentPane(panelMain);
         pack();
         setVisible(true);
-        setSize(400,400);
-
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setSize(500,400);
     }
 
-    public JPanel getMainPanel() {
-        return mainPanel;
+    public JPanel getPanelMain() {
+        return panelMain;
     }
 
-    public void setMainPanel(JPanel mainPanel) {
-        this.mainPanel = mainPanel;
+    public void setPanelMain(JPanel panelMain) {
+        this.panelMain = panelMain;
     }
 
-    public JComboBox getModuleCombobox() {
-        return moduleCombobox;
+    public JComboBox getDomainCombo() {
+        return domainCombo;
     }
 
-    public void setModuleCombobox(JComboBox moduleCombobox) {
-        this.moduleCombobox = moduleCombobox;
+    public void setDomainCombo(JComboBox domainCombo) {
+        this.domainCombo = domainCombo;
     }
 
-    public JComboBox getEnvironmentComboBox() {
-        return environmentComboBox;
+    public JComboBox getQaEnvironmentCombo() {
+        return qaEnvironmentCombo;
     }
 
-    public void setEnvironmentComboBox(JComboBox environmentComboBox) {
-        this.environmentComboBox = environmentComboBox;
+    public void setQaEnvironmentCombo(JComboBox qaEnvironmentCombo) {
+        this.qaEnvironmentCombo = qaEnvironmentCombo;
     }
 
-    public JTable getSourceTable() {
-        return sourceTable;
+    public JComboBox getProdEnvironmentCombo() {
+        return prodEnvironmentCombo;
     }
 
-    public void setSourceTable(JTable sourceTable) {
-        this.sourceTable = sourceTable;
+    public void setProdEnvironmentCombo(JComboBox prodEnvironmentCombo) {
+        this.prodEnvironmentCombo = prodEnvironmentCombo;
     }
 
-    public JTable getTargetTable() {
-        return targetTable;
+    public JTable getQaVersionResult() {
+        return qaVersionResult;
     }
 
-    public void setTargetTable(JTable targetTable) {
-        this.targetTable = targetTable;
+    public void setQaVersionResult(JTable qaVersionResult) {
+        this.qaVersionResult = qaVersionResult;
+    }
+
+    public JTable getProductionVersionAndResult() {
+        return productionVersionAndResult;
+    }
+
+    public void setProductionVersionAndResult(JTable productionVersionAndResult) {
+        this.productionVersionAndResult = productionVersionAndResult;
+    }
+
+    public JButton getVerifyButton() {
+        return verifyButton;
+    }
+
+    public void setVerifyButton(JButton verifyButton) {
+        this.verifyButton = verifyButton;
     }
 }
