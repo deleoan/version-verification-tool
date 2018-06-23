@@ -11,6 +11,9 @@ public class MainWindow extends JFrame {
     private JTable qaVersionResultTable;
     private JTable productionVersionAndResultTable;
     private JButton verifyButton;
+    private JLabel qaVersionsLabel;
+    private JLabel verificationResultLabel;
+    private JLabel titleLabel;
 
     public MainWindow() {
         setContentPane(mainPanel);
@@ -18,7 +21,6 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 400);
         setVisible(true);
-
     }
 
     public JPanel getMainPanel() {

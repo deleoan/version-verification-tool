@@ -74,7 +74,8 @@ public class MainWindowController {
     private void onSelectQAEnvironment(ActionEvent e) {
         columns = new String[]{URL, VERSION};
         qaTableModel = new DefaultTableModel(columns, 0);
-        qaTableModel.fireTableDataChanged();
+        prodTableModel = new DefaultTableModel(columns, 0);
+        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
 
         JComboBox cb = (JComboBox) e.getSource();
         selectedQaEnvironment = (String) cb.getSelectedItem();
