@@ -11,16 +11,8 @@ public class Environment {
         return envName;
     }
 
-    public void setEnvName(String envName) {
-        this.envName = envName;
-    }
-
     public List<Modules> getModules() {
         return Modules;
-    }
-
-    public void setModules(List<Modules> Modules) {
-        this.Modules = Modules;
     }
 
     @Override

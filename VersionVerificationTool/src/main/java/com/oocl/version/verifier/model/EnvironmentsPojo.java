@@ -9,10 +9,6 @@ public class EnvironmentsPojo {
         return Environment;
     }
 
-    public void setEnvironment(List<Environment> Environment) {
-        this.Environment = Environment;
-    }
-
     @Override
     public String toString() {
         return "ClassPojo [Environment = " + Environment + "]";

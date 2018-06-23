@@ -11,16 +11,8 @@ public class Modules {
         return module;
     }
 
-    public void setModule(String module) {
-        this.module = module;
-    }
-
     public List<String> getLinks() {
         return links;
-    }
-
-    public void setLinks(List<String> links) {
-        this.links = links;
     }
 
     @Override
