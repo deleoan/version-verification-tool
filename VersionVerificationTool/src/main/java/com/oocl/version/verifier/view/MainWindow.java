@@ -21,6 +21,7 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 500);
         setVisible(true);
+        setTitle("Version Verification Tool");
     }
 
     public JComboBox getDomainCombo() {
