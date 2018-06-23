@@ -39,7 +39,7 @@ public class MainWindowController {
 
 
     private EnvironmentsPojo environmentsPojo = getEnvironmentUrlsObject();
-    private List<Environment>  qaEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
+    private List<Environment> qaEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
     private List<Environment> nonQAEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
 
     public MainWindowController(MainWindow mainWindow) {
@@ -93,7 +93,6 @@ public class MainWindowController {
         JComboBox cb = (JComboBox) e.getSource();
         selectedDomain = (String) cb.getSelectedItem();
 
-
         qaTableModel = new DefaultTableModel(columns, 0);
         refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
         nonQATableModel = new DefaultTableModel(columns, 0);
@@ -109,17 +108,21 @@ public class MainWindowController {
         JComboBox cb = (JComboBox) e.getSource();
         selectedQaEnvironment = (String) cb.getSelectedItem();
 
-        if (selectedQaEnvironment != null && !selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+        if (areFieldsValid()) {
             String url = getDomainUrls(true).get(0);
             try {
                 qaVersion = Client.getVersion(url);
-                Object[] rowObject = {url, qaVersion};
-                qaTableModel.addRow(rowObject);
-                refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
             } catch (InterruptedException | JSONException e1) {
                 e1.printStackTrace();
             }
+            Object[] rowObject = {url, qaVersion};
+            qaTableModel.addRow(rowObject);
+            refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
         }
+    }
+
+    private boolean areFieldsValid() {
+        return selectedQaEnvironment != null && !selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty();
     }
 
     private void onSelectProductionDomain(ActionEvent e) {
@@ -130,16 +133,17 @@ public class MainWindowController {
         JComboBox cb = (JComboBox) e.getSource();
         selectedNonQaEnvironment = (String) cb.getSelectedItem();
         if (selectedNonQaEnvironment != null && !selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
-            List<String> nonQaDomainUrls = getDomainUrls(false);
-            for (String url : nonQaDomainUrls) {
+            List<String> nonQADomainUrls = getDomainUrls(false);
+            for (String url : nonQADomainUrls) {
+                String nonQAVersion = null;
                 try {
-                    String nonQAVersion = Client.getVersion(url);
-                    Object[] rowObject = {url, nonQAVersion};
-                    nonQATableModel.addRow(rowObject);
-                    refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
+                    nonQAVersion = Client.getVersion(url);
                 } catch (InterruptedException | JSONException e1) {
                     e1.printStackTrace();
                 }
+                Object[] rowObject = {url, nonQAVersion};
+                nonQATableModel.addRow(rowObject);
+                refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
             }
         }
     }
