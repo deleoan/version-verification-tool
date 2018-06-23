@@ -1,7 +1,7 @@
 package com.oocl.version.verifier.controller;
 
 import com.oocl.version.verifier.model.Environment;
-import com.oocl.version.verifier.model.EnvironmentsPojo;
+import com.oocl.version.verifier.model.EnvironmentsPOJO;
 import com.oocl.version.verifier.model.Modules;
 import com.oocl.version.verifier.util.Client;
 import com.oocl.version.verifier.view.MainWindow;
@@ -37,7 +37,7 @@ public class MainWindowController {
     private DefaultTableModel qaTableModel;
     private DefaultTableModel nonQATableModel;
 
-    private EnvironmentsPojo environmentsPOJO = getEnvironmentUrlsObject();
+    private EnvironmentsPOJO environmentsPOJO = getEnvironmentUrlsObject();
     private List<Environment> qaEnvironments = environmentsPOJO.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
     private List<Environment> nonQAEnvironments = environmentsPOJO.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
     private List<String> nonQAEnvironmentNameList = nonQAEnvironments.stream().map(Environment::getEnvName).collect(Collectors.toList());
@@ -60,7 +60,7 @@ public class MainWindowController {
     }
 
     private void populateDomainComboBox() {
-        List<Modules> nonQAModules = qaEnvironments.get(0).getModules();
+        List<Modules> nonQAModules = nonQAEnvironments.get(0).getModules();
         List<String> domainNameList = new ArrayList<>();
         for (Modules module : nonQAModules) {
             domainNameList.add(module.getModule());

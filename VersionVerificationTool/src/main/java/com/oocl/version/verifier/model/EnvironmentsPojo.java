@@ -2,7 +2,7 @@ package com.oocl.version.verifier.model;
 
 import java.util.List;
 
-public class EnvironmentsPojo {
+public class EnvironmentsPOJO {
     private List<Environment> Environment;
 
     public List<Environment> getEnvironment() {

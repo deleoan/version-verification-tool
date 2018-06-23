@@ -10,7 +10,7 @@
       <enabled value="false"/>
       <font name="Gisha"/>
       <foreground color="-2565928"/>
-      <preferredSize width="500" height="400"/>
+      <preferredSize width="600" height="500"/>
     </properties>
     <border type="etched"/>
     <children>
