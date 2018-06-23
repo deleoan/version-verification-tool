@@ -1,18 +1,22 @@
 package com.oocl.version.verifier.controller;
 
+import com.google.gson.Gson;
+import com.oocl.version.verifier.model.Environment;
+import com.oocl.version.verifier.model.EnvironmentsPojo;
+import com.oocl.version.verifier.model.Modules;
 import com.oocl.version.verifier.util.Client;
-import com.oocl.version.verifier.util.Util;
 import com.oocl.version.verifier.view.MainWindow;
 import org.codehaus.jettison.json.JSONException;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonValue;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
+
+import static com.oocl.version.verifier.util.Util.getEnvironmentUrlsObject;
 
 public class MainWindowController {
     private static final String URL = "URL";
@@ -22,25 +26,61 @@ public class MainWindowController {
     private static final String NO_VERSION = "No Version";
     private static final String SERVER_IS_DOWN = "Server is down";
     private static final String VERSION_MISMATCHED = "Version Mismatched";
-    private static final String QA_DOMAIN_JSON_PATH = "urls/qaDomain.json";
-    private static final String PROD_DOMAIN_JSON_PATH = "urls/prodDomain.json";
-    private static final String PP_DOMAIN_JSON_PATH = "urls/ppDomain.json";
 
     private final MainWindow mainWindow;
 
     private String qaVersion = "";
-    private String columns[] = {};
+    private String[] columns = {};
     private String selectedDomain = "";
     private String selectedQaEnvironment = "";
     private String selectedNonQaEnvironment = "";
 
     private DefaultTableModel qaTableModel;
-    private DefaultTableModel prodTableModel;
+    private DefaultTableModel nonQATableModel;
 
+    private String jsonContent = getEnvironmentUrlsObject().toString();
+    private EnvironmentsPojo pojo = new Gson().fromJson(jsonContent, EnvironmentsPojo.class);
+    private List<Environment>  qaEnvironment = pojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
+    private List<Environment> nonQAEnvironment = pojo.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
 
     public MainWindowController(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         initController();
+
+        populateDomainComboBox();
+        populateQAComboBox();
+        populateNonQAComboBox();
+    }
+
+    private void populateDomainComboBox() {
+        List<Modules> nonQAModules = qaEnvironment.get(0).getModules();
+        List<String> domainNameList = new ArrayList<>();
+        for (Modules module : nonQAModules) {
+            domainNameList.add(module.getModule());
+        }
+        String[] domainNames = domainNameList.toArray(new String[0]);
+        JComboBox domainCombo = this.mainWindow.getDomainCombo();
+        setComboBoxModel(domainCombo, domainNames, "Select Domain");
+    }
+
+    private void populateNonQAComboBox() {
+        List<String> nonQAEnvironmentNameList = nonQAEnvironment.stream().map(Environment::getEnvName).collect(Collectors.toList());
+        String[] nonQAEnvironmentName = nonQAEnvironmentNameList.toArray(new String[0]);
+        JComboBox nonQAEnvironmentCombo = this.mainWindow.getProdEnvironmentCombo();
+        setComboBoxModel(nonQAEnvironmentCombo, nonQAEnvironmentName, "Select Non QA Environment");
+    }
+
+    private void populateQAComboBox() {
+        List<String> qaEnvironmentNameList = qaEnvironment.stream().map(Environment::getEnvName).collect(Collectors.toList());
+        String[] qaEnvironmentName = qaEnvironmentNameList.toArray(new String[0]);
+        JComboBox qaEnvironmentCombo = this.mainWindow.getQaEnvironmentCombo();
+        setComboBoxModel(qaEnvironmentCombo, qaEnvironmentName, "Select QA Environment");
+    }
+
+    private void setComboBoxModel(JComboBox comboBox, String[] environmentName, String defaultSelectedItem) {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(environmentName);
+        model.setSelectedItem(defaultSelectedItem);
+        comboBox.setModel(model);
     }
 
     private void initController() {
@@ -51,10 +91,8 @@ public class MainWindowController {
 
         /*
         TODO:
-        POPULATE MODEL AND REFLECT TO UI
         CREATE TDD!!!!!
         MAKE IT EXECUTABLE
-        CHANGE SELECTED ITEM WHEN QA COMBO UPDATED
         IF HAVE MORE TIME:
             CHANGE COMBO BOX TO MULTI-SELECT
             ADD PROGRESS BAR
@@ -65,32 +103,27 @@ public class MainWindowController {
         JComboBox cb = (JComboBox) e.getSource();
         selectedDomain = (String) cb.getSelectedItem();
 
+
         qaTableModel = new DefaultTableModel(columns, 0);
         refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
-        prodTableModel = new DefaultTableModel(columns, 0);
-        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
+        nonQATableModel = new DefaultTableModel(columns, 0);
+        refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
     }
 
     private void onSelectQAEnvironment(ActionEvent e) {
         columns = new String[]{URL, VERSION};
         qaTableModel = new DefaultTableModel(columns, 0);
-        prodTableModel = new DefaultTableModel(columns, 0);
-        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
+        nonQATableModel = new DefaultTableModel(columns, 0);
+        refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
 
         JComboBox cb = (JComboBox) e.getSource();
         selectedQaEnvironment = (String) cb.getSelectedItem();
 
-        assert selectedQaEnvironment != null;
-        if (!selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
-            String updatedDomain = selectedDomain.contains("SHP") ? "SHP" : selectedDomain;
-            JsonArray qaDomainUrls = getDomainUrls(true, false, updatedDomain);
-
+        if (selectedQaEnvironment != null && !selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+            String url = getDomainUrls(true).get(0);
             try {
-                JsonObject obj = (JsonObject) qaDomainUrls.get(0);
-                JsonString url = (JsonString) obj.get(selectedQaEnvironment);
-
-                qaVersion = Client.getVersion(url.getString());
-                Object[] rowObject = {url.toString(), qaVersion};
+                qaVersion = Client.getVersion(url);
+                Object[] rowObject = {url, qaVersion};
                 qaTableModel.addRow(rowObject);
                 refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
             } catch (InterruptedException | JSONException e1) {
@@ -101,24 +134,19 @@ public class MainWindowController {
 
     private void onSelectProductionDomain(ActionEvent e) {
         columns = new String[]{URL, VERSION, RESULT};
-        prodTableModel = new DefaultTableModel(columns, 0);
-        prodTableModel.fireTableDataChanged();
+        nonQATableModel = new DefaultTableModel(columns, 0);
+        nonQATableModel.fireTableDataChanged();
 
         JComboBox cb = (JComboBox) e.getSource();
         selectedNonQaEnvironment = (String) cb.getSelectedItem();
-        assert selectedNonQaEnvironment != null;
-        if (!selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
-            boolean isProduction = selectedNonQaEnvironment.equals("PROD");
-            JsonArray nonQaDomainUrls = getDomainUrls(false, isProduction, "");
-
-            for (JsonValue url : nonQaDomainUrls) {
-                System.out.println(url.toString());
+        if (selectedNonQaEnvironment != null && !selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+            List<String> nonQaDomainUrls = getDomainUrls(false);
+            for (String url : nonQaDomainUrls) {
                 try {
-                    JsonString newUrl = (JsonString) url;
-                    String nonQAVersion = Client.getVersion(newUrl.getString());
-                    Object[] rowObject = {url.toString(), nonQAVersion};
-                    prodTableModel.addRow(rowObject);
-                    refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
+                    String nonQAVersion = Client.getVersion(url);
+                    Object[] rowObject = {url, nonQAVersion};
+                    nonQATableModel.addRow(rowObject);
+                    refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
                 } catch (InterruptedException | JSONException e1) {
                     e1.printStackTrace();
                 }
@@ -126,11 +154,19 @@ public class MainWindowController {
         }
     }
 
-    private JsonArray getDomainUrls(boolean isQAEnvironment, boolean isProduction, String domain) {
+    private List<String> getDomainUrls(boolean isQAEnvironment) {
+        String domain = selectedDomain.contains("SHP") ? "SHP" : selectedDomain;
         domain = domain.isEmpty() ? selectedDomain : domain;
-        String path = getPath(isQAEnvironment, isProduction);
-        JsonObject environmentUrlsObject = Util.getEnvironmentUrlsObject(path);
-        return (JsonArray) environmentUrlsObject.get(domain);
+        String finalDomain = domain;
+        List<Environment> environmentModules;
+
+        if (isQAEnvironment) {
+            environmentModules = qaEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedQaEnvironment)).collect(Collectors.toList());
+        } else {
+            environmentModules = nonQAEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedNonQaEnvironment)).collect(Collectors.toList());
+        }
+
+        return environmentModules.get(0).getModules().stream().filter(mod -> mod.getModule().equals(finalDomain)).collect(Collectors.toList()).get(0).getLinks();
     }
 
     private void onVerifyButtonClicked() {
@@ -142,7 +178,7 @@ public class MainWindowController {
     }
 
     private void verifyVersions() {
-        for (Object record : prodTableModel.getDataVector()) {
+        for (Object record : nonQATableModel.getDataVector()) {
             Vector prodRecord = ((Vector) record);
             if (prodRecord.get(1).equals(qaVersion)) {
                 prodRecord.add(2, VERSION_MATCHED);
@@ -152,21 +188,7 @@ public class MainWindowController {
                 prodRecord.add(2, VERSION_MISMATCHED);
             }
         }
-        refreshTable(prodTableModel, this.mainWindow.getProductionVersionAndResultTable());
-    }
-
-    private String getPath(boolean isQAEnvironment, boolean isProduction) {
-        String path;
-        if (isQAEnvironment) {
-            path = QA_DOMAIN_JSON_PATH;
-        } else {
-            if (isProduction) {
-                path = PROD_DOMAIN_JSON_PATH;
-            } else {
-                path = PP_DOMAIN_JSON_PATH;
-            }
-        }
-        return path;
+        refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
     }
 
     private void refreshTable(DefaultTableModel tableModel, JTable tableResult) {

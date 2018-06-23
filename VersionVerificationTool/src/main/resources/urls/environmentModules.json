@@ -1,0 +1,379 @@
+{
+  "Environment": [
+    {
+      "envName": "PP",
+      "Modules": [
+        {
+          "module": "BKG",
+          "links": [
+            "http://hln2557p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hln2558p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hln2559p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hln2560p:8144/wls_prs_bkg/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHV",
+          "links": [
+            "http://hln2559p:8145/wls_prs_shv/verification/version.jsp",
+            "http://hln2560p:8145/wls_prs_shv/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHP",
+          "links": [
+            "http://hkgcvdv00038:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00041:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00291:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00292:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00293:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00294:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00296:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00322:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00326:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00346:8109/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHPBE",
+          "links": [
+            "http://hkgcvdv00038:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00041:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00291:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00292:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00293:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00294:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00296:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00322:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00326:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00346:8111/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHPFE",
+          "links": [
+            "http://hkgcvdv00038:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00041:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00291:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00292:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00293:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00294:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00296:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00322:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00326:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00346:8110/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHPV",
+          "links": [
+            "http://hkgcvdv00291:8123/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00292:8123/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00293:8123/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvdv00294:8123/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERDOM",
+          "links": [
+            "http://hkgcvdv00230:8132/wls_dom_ber/verification/version.jsp",
+            "http://hkgcvdv00284:8132/wls_dom_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERPRS",
+          "links": [
+            "http://hln2557p:8139/wls_prs_ber/verification/version.jsp",
+            "http://hln2558p:8139/wls_prs_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRDOM",
+          "links": [
+            "http://hkgcvdv00230:8138/wls_dom_bcr/verification/version.jsp",
+            "http://hkgcvdv00284:8138/wls_dom_bcr/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRPRS",
+          "links": [
+            "http://hln2557p:8128/wls_prs_bcr/verification/version.jsp",
+            "http://hln2558p:8128/wls_prs_bcr/verification/version.jsp"
+          ]
+        }
+      ]
+    },
+    {
+      "envName": "PROD",
+      "Modules": [
+        {
+          "module": "BKG",
+          "links": [
+            "http://hlp3143p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hlp3144p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hlp3146p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hlp3147p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hlp3149p:8144/wls_prs_bkg/verification/version.jsp",
+            "http://hlp3151p:8144/wls_prs_bkg/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHV",
+          "links": [
+            "http://hlp3142p:8145/wls_prs_shv/verification/version.jsp",
+            "http://hlp3143p:8145/wls_prs_shv/verification/version.jsp",
+            "http://hlp3145p:8145/wls_prs_shv/verification/version.jsp",
+            "http://hlp3146p:8145/wls_prs_shv/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHP",
+          "links": [
+            "http://hkgcvpd00005:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00006:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00013:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00015:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00016:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00020:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00021:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00032:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00037:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00038:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00045:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00046:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00068:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00069:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00075:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00117:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00118:8109/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00127:8109/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHPBE",
+          "links": [
+            "http://hkgcvpd00005:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00006:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00013:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00015:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00016:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00020:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00021:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00032:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00037:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00038:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00045:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00046:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00068:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00069:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00075:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00117:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00118:8111/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00127:8111/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHPFE",
+          "links": [
+            "http://hkgcvpd00005:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00006:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00013:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00015:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00016:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00020:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00021:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00032:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00037:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00038:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00045:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00046:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00068:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00069:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00075:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00117:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00118:8110/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00127:8110/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHPV",
+          "links": [
+            "http://hkgcvpd00011:8123/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00026:8123/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00036:8123/wls_dom_shp/verification/version.jsp",
+            "http://hkgcvpd00123:8123/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERDOM",
+          "links": [
+            "http://hkgcvpd00012:8132/wls_dom_ber/verification/version.jsp",
+            "http://hkgcvpd00074:8132/wls_dom_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERPRS",
+          "links": [
+            "http://hlp3142p:8139/wls_prs_ber/verification/version.jsp",
+            "http://hlp3145p:8139/wls_prs_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRDOM",
+          "links": [
+            "http://hkgcvpd00029:8138/wls_dom_bcr/verification/version.jsp",
+            "http://hkgcvpd00060:8138/wls_dom_bcr/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRPRS",
+          "links": [
+            "http://hlp3142p:8128/wls_prs_bcr/verification/version.jsp",
+            "http://hlp3145p:8128/wls_prs_bcr/verification/version.jsp"
+          ]
+        }
+      ]
+    },
+    {
+      "envName": "QA1",
+      "Modules": [
+        {
+          "module": "BKG",
+          "links": [
+            "http://irisqa1.oocl.com/wls_prs_bkg/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHV",
+          "links": [
+            "http://irisqa1.oocl.com/wls_prs_shv/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHP",
+          "links": [
+            "http://irisbackendqa1.oocl.com/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERDOM",
+          "links": [
+            "http://irisbackendqa1.oocl.com/wls_dom_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERPRS",
+          "links": [
+            "http://irisqa1.oocl.com/wls_prs_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRDOM",
+          "links": [
+            "http://irisbackendqa1.oocl.com/wls_dom_bcr/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRPRS",
+          "links": [
+            "http://irisqa1.oocl.com/wls_prs_bcr/verification/version.jsp"
+          ]
+        }
+      ]
+    },
+    {
+      "envName": "QA2",
+      "Modules": [
+        {
+          "module": "BKG",
+          "links": [
+            "http://irisqa2.oocl.com/wls_prs_bkg/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHV",
+          "links": [
+            "http://irisqa2.oocl.com/wls_prs_shv/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHP",
+          "links": [
+            "http://irisbackendqa2.oocl.com/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERDOM",
+          "links": [
+            "http://irisbackendqa2.oocl.com/wls_dom_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERPRS",
+          "links": [
+            "http://irisqa2.oocl.com/wls_prs_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRDOM",
+          "links": [
+            "http://irisbackendqa2.oocl.com/wls_dom_bcr/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRPRS",
+          "links": [
+            "http://irisqa2.oocl.com/wls_prs_bcr/verification/version.jsp"
+          ]
+        }
+      ]
+    },
+    {
+      "envName": "QA3",
+      "Modules": [
+        {
+          "module": "BKG",
+          "links": [
+            "http://irisqa3.oocl.com/wls_prs_bkg/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHV",
+          "links": [
+            "http://irisqa3.oocl.com/wls_prs_shv/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "SHP",
+          "links": [
+            "http://irisbackendqa3.oocl.com/wls_dom_shp/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERDOM",
+          "links": [
+            "http://irisbackendqa3.oocl.com/wls_dom_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BERPRS",
+          "links": [
+            "http://irisqa3.oocl.com/wls_prs_ber/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRDOM",
+          "links": [
+            "http://irisbackendqa3.oocl.com/wls_dom_bcr/verification/version.jsp"
+          ]
+        },
+        {
+          "module": "BCRPRS",
+          "links": [
+            "http://irisqa3.oocl.com/wls_prs_bcr/verification/version.jsp"
+          ]
+        }
+      ]
+    }
+  ]
+}

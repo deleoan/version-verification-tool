@@ -1,22 +1,30 @@
 package com.oocl.version.verifier.model;
 
+import java.util.List;
+
 public class Environment {
-    private String name;
-    private String code;
+    private String envName;
 
-    public String getName() {
-        return name;
+    private List<Modules> Modules;
+
+    public String getEnvName() {
+        return envName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEnvName(String envName) {
+        this.envName = envName;
     }
 
-    public String getCode() {
-        return code;
+    public List<Modules> getModules() {
+        return Modules;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setModules(List<Modules> Modules) {
+        this.Modules = Modules;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassPojo [envName = " + envName + ", Modules = " + Modules + "]";
     }
 }

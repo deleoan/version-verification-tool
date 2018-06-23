@@ -6,9 +6,12 @@ import javax.json.JsonReader;
 import java.io.InputStream;
 
 public class Util {
-    public static JsonObject getEnvironmentUrlsObject(String path) {
+
+    public static final String PATH = "urls/environmentModules.json";
+
+    public static JsonObject getEnvironmentUrlsObject() {
         ClassLoader classLoader = Util.class.getClassLoader();
-        InputStream is = classLoader.getResourceAsStream(path);
+        InputStream is = classLoader.getResourceAsStream(PATH);
 
         JsonReader reader = Json.createReader(is);
         JsonObject environmentUrlsObject = reader.readObject();

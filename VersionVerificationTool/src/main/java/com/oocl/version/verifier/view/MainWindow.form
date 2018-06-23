@@ -20,12 +20,7 @@
         </constraints>
         <properties>
           <font name="Gisha"/>
-          <model>
-            <item value="Select QA Environment"/>
-            <item value="QA1"/>
-            <item value="QA2"/>
-            <item value="QA3"/>
-          </model>
+          <model/>
           <verifyInputWhenFocusTarget value="false"/>
         </properties>
       </component>
@@ -35,11 +30,7 @@
         </constraints>
         <properties>
           <font name="Gisha"/>
-          <model>
-            <item value="Select Non-QA Domain"/>
-            <item value="PP"/>
-            <item value="PROD"/>
-          </model>
+          <model/>
         </properties>
       </component>
       <component id="1ceb9" class="javax.swing.JComboBox" binding="domainCombo">
@@ -48,19 +39,7 @@
         </constraints>
         <properties>
           <font name="Gisha"/>
-          <model>
-            <item value="Select Domain"/>
-            <item value="BKG"/>
-            <item value="SHV"/>
-            <item value="SHP"/>
-            <item value="SHPBE"/>
-            <item value="SHPFE"/>
-            <item value="SHPV"/>
-            <item value="BERDOM"/>
-            <item value="BERPRS"/>
-            <item value="BCRDOM"/>
-            <item value="BCRPRS"/>
-          </model>
+          <model/>
           <toolTipText value=""/>
         </properties>
       </component>
