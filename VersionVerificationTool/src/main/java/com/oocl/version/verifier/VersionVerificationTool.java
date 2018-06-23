@@ -3,7 +3,7 @@ package com.oocl.version.verifier;
 import com.oocl.version.verifier.controller.MainWindowController;
 import com.oocl.version.verifier.view.MainWindow;
 
-public class AppNew {
+public class VersionVerificationTool {
 
     public static void main(String[] args) {
 

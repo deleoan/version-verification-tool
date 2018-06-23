@@ -31,16 +31,17 @@ public class MainWindowController {
     private String qaVersion = "";
     private String[] columns = {};
     private String selectedDomain = "";
-    private String selectedQaEnvironment = "";
-    private String selectedNonQaEnvironment = "";
+    private String selectedQAEnvironment = "";
+    private String selectedNonQAEnvironment = "";
 
     private DefaultTableModel qaTableModel;
     private DefaultTableModel nonQATableModel;
 
-
     private EnvironmentsPojo environmentsPojo = getEnvironmentUrlsObject();
     private List<Environment> qaEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
     private List<Environment> nonQAEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
+    List<String> nonQAEnvironmentNameList = nonQAEnvironment.stream().map(Environment::getEnvName).collect(Collectors.toList());
+
 
     public MainWindowController(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -49,6 +50,13 @@ public class MainWindowController {
         populateDomainComboBox();
         populateQAComboBox();
         populateNonQAComboBox();
+    }
+
+    private void initController() {
+        this.mainWindow.getDomainCombo().addActionListener(this::onSelectDomain);
+        this.mainWindow.getQaEnvironmentCombo().addActionListener(this::onSelectQAEnvironment);
+        this.mainWindow.getProdEnvironmentCombo().addActionListener(this::onSelectProductionDomain);
+        this.mainWindow.getVerifyButton().addActionListener(e -> onVerifyButtonClicked());
     }
 
     private void populateDomainComboBox() {
@@ -63,7 +71,6 @@ public class MainWindowController {
     }
 
     private void populateNonQAComboBox() {
-        List<String> nonQAEnvironmentNameList = nonQAEnvironment.stream().map(Environment::getEnvName).collect(Collectors.toList());
         String[] nonQAEnvironmentName = nonQAEnvironmentNameList.toArray(new String[0]);
         JComboBox nonQAEnvironmentCombo = this.mainWindow.getProdEnvironmentCombo();
         setComboBoxModel(nonQAEnvironmentCombo, nonQAEnvironmentName, "Select Non QA Environment");
@@ -82,31 +89,31 @@ public class MainWindowController {
         comboBox.setModel(model);
     }
 
-    private void initController() {
-        this.mainWindow.getDomainCombo().addActionListener(this::onSelectDomain);
-        this.mainWindow.getQaEnvironmentCombo().addActionListener(this::onSelectQAEnvironment);
-        this.mainWindow.getProdEnvironmentCombo().addActionListener(this::onSelectProductionDomain);
-        this.mainWindow.getVerifyButton().addActionListener(e -> onVerifyButtonClicked());
-    }
-
     private void onSelectDomain(ActionEvent e) {
         JComboBox cb = (JComboBox) e.getSource();
         selectedDomain = (String) cb.getSelectedItem();
 
-        qaTableModel = new DefaultTableModel(columns, 0);
         refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
-        nonQATableModel = new DefaultTableModel(columns, 0);
         refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
+
+        populateNonQAComboBox();
+        populateQAComboBox();
+    }
+
+    private void refreshTable(DefaultTableModel tableModel, JTable qaVersionResultTable) {
+        tableModel = new DefaultTableModel(columns, 0);
+        qaVersionResultTable.setModel(tableModel);
+        tableModel.fireTableDataChanged();
     }
 
     private void onSelectQAEnvironment(ActionEvent e) {
         columns = new String[]{URL, VERSION};
         qaTableModel = new DefaultTableModel(columns, 0);
-        nonQATableModel = new DefaultTableModel(columns, 0);
+
         refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
 
         JComboBox cb = (JComboBox) e.getSource();
-        selectedQaEnvironment = (String) cb.getSelectedItem();
+        selectedQAEnvironment = (String) cb.getSelectedItem();
 
         if (areFieldsValid()) {
             String url = getDomainUrls(true).get(0);
@@ -116,13 +123,16 @@ public class MainWindowController {
                 e1.printStackTrace();
             }
             Object[] rowObject = {url, qaVersion};
+
             qaTableModel.addRow(rowObject);
-            refreshTable(qaTableModel, this.mainWindow.getQaVersionResultTable());
+            this.mainWindow.getQaVersionResultTable().setModel(qaTableModel);
+            qaTableModel.fireTableDataChanged();
         }
+        populateNonQAComboBox();
     }
 
     private boolean areFieldsValid() {
-        return selectedQaEnvironment != null && !selectedQaEnvironment.isEmpty() && !selectedDomain.isEmpty();
+        return selectedQAEnvironment != null && !selectedQAEnvironment.isEmpty() && !selectedDomain.isEmpty();
     }
 
     private void onSelectProductionDomain(ActionEvent e) {
@@ -131,8 +141,8 @@ public class MainWindowController {
         nonQATableModel.fireTableDataChanged();
 
         JComboBox cb = (JComboBox) e.getSource();
-        selectedNonQaEnvironment = (String) cb.getSelectedItem();
-        if (selectedNonQaEnvironment != null && !selectedNonQaEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
+        selectedNonQAEnvironment = (String) cb.getSelectedItem();
+        if (selectedNonQAEnvironment != null && !selectedNonQAEnvironment.isEmpty() && !selectedDomain.isEmpty()) {
             List<String> nonQADomainUrls = getDomainUrls(false);
             for (String url : nonQADomainUrls) {
                 String nonQAVersion = null;
@@ -142,8 +152,10 @@ public class MainWindowController {
                     e1.printStackTrace();
                 }
                 Object[] rowObject = {url, nonQAVersion};
+
                 nonQATableModel.addRow(rowObject);
-                refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
+                this.mainWindow.getProductionVersionAndResultTable().setModel(nonQATableModel);
+                nonQATableModel.fireTableDataChanged();
             }
         }
     }
@@ -155,16 +167,16 @@ public class MainWindowController {
         List<Environment> environmentModules;
 
         if (isQAEnvironment) {
-            environmentModules = qaEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedQaEnvironment)).collect(Collectors.toList());
+            environmentModules = qaEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedQAEnvironment)).collect(Collectors.toList());
         } else {
-            environmentModules = nonQAEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedNonQaEnvironment)).collect(Collectors.toList());
+            environmentModules = nonQAEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedNonQAEnvironment)).collect(Collectors.toList());
         }
 
         return environmentModules.get(0).getModules().stream().filter(mod -> mod.getModule().equals(finalDomain)).collect(Collectors.toList()).get(0).getLinks();
     }
 
     private void onVerifyButtonClicked() {
-        if (selectedDomain.isEmpty() || selectedQaEnvironment.isEmpty() || selectedNonQaEnvironment.isEmpty()) {
+        if (selectedDomain.isEmpty() || selectedQAEnvironment.isEmpty() || selectedNonQAEnvironment.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please fill all required fields!");
         } else {
             verifyVersions();
@@ -182,11 +194,8 @@ public class MainWindowController {
                 prodRecord.add(2, VERSION_MISMATCHED);
             }
         }
-        refreshTable(nonQATableModel, this.mainWindow.getProductionVersionAndResultTable());
+        this.mainWindow.getProductionVersionAndResultTable().setModel(nonQATableModel);
+        nonQATableModel.fireTableDataChanged();
     }
 
-    private void refreshTable(DefaultTableModel tableModel, JTable tableResult) {
-        tableResult.setModel(tableModel);
-        tableModel.fireTableDataChanged();
-    }
 }
