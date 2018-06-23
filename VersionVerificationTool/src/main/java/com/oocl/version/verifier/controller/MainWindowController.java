@@ -37,10 +37,10 @@ public class MainWindowController {
     private DefaultTableModel qaTableModel;
     private DefaultTableModel nonQATableModel;
 
-    private EnvironmentsPojo environmentsPojo = getEnvironmentUrlsObject();
-    private List<Environment> qaEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
-    private List<Environment> nonQAEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
-    List<String> nonQAEnvironmentNameList = nonQAEnvironment.stream().map(Environment::getEnvName).collect(Collectors.toList());
+    private EnvironmentsPojo environmentsPOJO = getEnvironmentUrlsObject();
+    private List<Environment> qaEnvironments = environmentsPOJO.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
+    private List<Environment> nonQAEnvironments = environmentsPOJO.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
+    private List<String> nonQAEnvironmentNameList = nonQAEnvironments.stream().map(Environment::getEnvName).collect(Collectors.toList());
 
 
     public MainWindowController(MainWindow mainWindow) {
@@ -60,7 +60,7 @@ public class MainWindowController {
     }
 
     private void populateDomainComboBox() {
-        List<Modules> nonQAModules = qaEnvironment.get(0).getModules();
+        List<Modules> nonQAModules = qaEnvironments.get(0).getModules();
         List<String> domainNameList = new ArrayList<>();
         for (Modules module : nonQAModules) {
             domainNameList.add(module.getModule());
@@ -77,7 +77,7 @@ public class MainWindowController {
     }
 
     private void populateQAComboBox() {
-        List<String> qaEnvironmentNameList = qaEnvironment.stream().map(Environment::getEnvName).collect(Collectors.toList());
+        List<String> qaEnvironmentNameList = qaEnvironments.stream().map(Environment::getEnvName).collect(Collectors.toList());
         String[] qaEnvironmentName = qaEnvironmentNameList.toArray(new String[0]);
         JComboBox qaEnvironmentCombo = this.mainWindow.getQaEnvironmentCombo();
         setComboBoxModel(qaEnvironmentCombo, qaEnvironmentName, "Select QA Environment");
@@ -167,9 +167,9 @@ public class MainWindowController {
         List<Environment> environmentModules;
 
         if (isQAEnvironment) {
-            environmentModules = qaEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedQAEnvironment)).collect(Collectors.toList());
+            environmentModules = qaEnvironments.stream().filter(environment -> environment.getEnvName().equals(selectedQAEnvironment)).collect(Collectors.toList());
         } else {
-            environmentModules = nonQAEnvironment.stream().filter(environment -> environment.getEnvName().equals(selectedNonQAEnvironment)).collect(Collectors.toList());
+            environmentModules = nonQAEnvironments.stream().filter(environment -> environment.getEnvName().equals(selectedNonQAEnvironment)).collect(Collectors.toList());
         }
 
         return environmentModules.get(0).getModules().stream().filter(mod -> mod.getModule().equals(finalDomain)).collect(Collectors.toList()).get(0).getLinks();
