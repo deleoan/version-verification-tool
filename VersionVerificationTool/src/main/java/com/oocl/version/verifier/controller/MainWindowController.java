@@ -1,6 +1,5 @@
 package com.oocl.version.verifier.controller;
 
-import com.google.gson.Gson;
 import com.oocl.version.verifier.model.Environment;
 import com.oocl.version.verifier.model.EnvironmentsPojo;
 import com.oocl.version.verifier.model.Modules;
@@ -38,10 +37,10 @@ public class MainWindowController {
     private DefaultTableModel qaTableModel;
     private DefaultTableModel nonQATableModel;
 
-    private String jsonContent = getEnvironmentUrlsObject().toString();
-    private EnvironmentsPojo pojo = new Gson().fromJson(jsonContent, EnvironmentsPojo.class);
-    private List<Environment>  qaEnvironment = pojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
-    private List<Environment> nonQAEnvironment = pojo.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
+
+    private EnvironmentsPojo environmentsPojo = getEnvironmentUrlsObject();
+    private List<Environment>  qaEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> environment.getEnvName().contains("QA")).collect(Collectors.toList());
+    private List<Environment> nonQAEnvironment = environmentsPojo.getEnvironment().stream().filter(environment -> !environment.getEnvName().contains("QA")).collect(Collectors.toList());
 
     public MainWindowController(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -88,15 +87,6 @@ public class MainWindowController {
         this.mainWindow.getQaEnvironmentCombo().addActionListener(this::onSelectQAEnvironment);
         this.mainWindow.getProdEnvironmentCombo().addActionListener(this::onSelectProductionDomain);
         this.mainWindow.getVerifyButton().addActionListener(e -> onVerifyButtonClicked());
-
-        /*
-        TODO:
-        CREATE TDD!!!!!
-        MAKE IT EXECUTABLE
-        IF HAVE MORE TIME:
-            CHANGE COMBO BOX TO MULTI-SELECT
-            ADD PROGRESS BAR
-        */
     }
 
     private void onSelectDomain(ActionEvent e) {
